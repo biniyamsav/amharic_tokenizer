@@ -1,11 +1,11 @@
 from collections import Counter
-
+import re
 
 def count_words(lines: list[str]) -> Counter:
     """Count how many times each word appears in the text."""
     counts = Counter()
     for line in lines:
-        counts.update(line.split())
+        counts.update(pre_tokenize(line))
     return counts
 def get_pair_counts(word_freqs: dict) -> Counter:
     """Count how often each neighboring pair of tokens appears."""
@@ -58,6 +58,9 @@ def encode_word(word: str, merges: list[tuple]) -> list[str]:
 def encode(text: str, merges: list[tuple]) -> list[str]:
     """Tokenize a full line of text into BPE tokens."""
     tokens = []
-    for word in text.split():
+    for word in pre_tokenize(text):
         tokens.extend(encode_word(word, merges))
     return tokens
+def pre_tokenize(text: str) -> list[str]:
+    """Split text into words and single punctuation marks."""
+    return re.findall(r"\w+|[^\w\s]", text)
