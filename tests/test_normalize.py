@@ -1,6 +1,7 @@
 from src.amharic_tokenizer.normalize import (
     clean_punctuation,
     normalize_text,
+    space_punctuation,
     unify_homophones,
 )
 
@@ -18,8 +19,12 @@ def test_clean_punctuation():
 
 
 def test_normalize_text():
-    assert normalize_text("  ሠላም፡፡   ሡ  ") == "ሰላም። ሱ"
+    assert normalize_text("  ሠላም፡፡   ሡ  ") == "ሰላም ። ሱ"
 
 
 def test_homophones_can_be_turned_off():
     assert normalize_text("ሠላም", homophones=False) == "ሠላም"
+
+
+def test_space_punctuation():
+    assert space_punctuation("ሰላም ነው።").split() == ["ሰላም", "ነው", "።"]

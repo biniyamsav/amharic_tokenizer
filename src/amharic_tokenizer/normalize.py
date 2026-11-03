@@ -21,5 +21,9 @@ def normalize_text(text: str, homophones: bool = True) -> str:
     if homophones:
         text = unify_homophones(text)
     text = clean_punctuation(text)
+    text = space_punctuation(text)
     text = re.sub(r"\s+", " ", text).strip()
     return text
+def space_punctuation(text: str) -> str:
+    """Put spaces around Ethiopic punctuation so it becomes its own token."""
+    return re.sub(r"([።፣፤፥፦፧፨])", r" \1 ", text)
