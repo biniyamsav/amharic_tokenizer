@@ -1,0 +1,9 @@
+sentencepiece
+tokenizers
+regex
+numpy
+pandas
+matplotlib
+tqdm
+pytest
+ruff
