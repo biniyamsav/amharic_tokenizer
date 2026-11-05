@@ -44,3 +44,13 @@ results/
 # OS
 .DS_Store
 .ipynb_checkpoints/
+
+# Caches
+.pytest_cache/
+.ruff_cache/
+
+# Trash
+_trash/
+
+# Logs
+*.log
