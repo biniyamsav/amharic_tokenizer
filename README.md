@@ -5,7 +5,7 @@ A subword (BPE) tokenizer for Amharic (Ge'ez script), trained on about 40M chara
 
 ## Why
 
-Byte-level tokenizers such as GPT's split Amharic into raw bytes: each Ge'ez character takes 3 bytes in UTF-8, so a typical Amharic word becomes 8-10 tokens. That makes Amharic text expensive and slow for language models. A tokenizer trained on Amharic needs far fewer tokens for the same text.
+Byte-level tokenizers such as GPT's split Amharic into raw bytes: each character takes 3 bytes in UTF-8, so a typical Amharic word becomes 8-10 tokens. That makes Amharic text expensive and slow for language models. A tokenizer trained on Amharic needs far fewer tokens for the same text.
 
 ## Results
 
