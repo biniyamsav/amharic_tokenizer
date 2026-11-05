@@ -1,6 +1,7 @@
 # Amharic Tokenizer
 
 A subword (BPE) tokenizer for Amharic (Ge'ez script), trained on about 40M characters of cleaned Amharic text. It includes a from-scratch BPE implementation, a SentencePiece-based production tokenizer, and a benchmark against widely used tokenizers.
+**Models:** [huggingface.co/biniyam882/amharic-bpe-tokenizer](https://huggingface.co/biniyam882/amharic-bpe-tokenizer)
 
 ## Why
 
