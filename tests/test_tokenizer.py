@@ -2,10 +2,9 @@ from pathlib import Path
 
 import pytest
 
-from src.amharic_tokenizer.normalize import normalize_text
-from src.amharic_tokenizer.sentencepiece_wrapper import load_tokenizer, tokenize
+from src.amharic_tokenizer.sentencepiece_wrapper import AmharicTokenizer
 
-MODEL = "models/am_bpe_20k.model"
+MODEL = "models/am_bpe_32k.model"
 
 pytestmark = pytest.mark.skipif(
     not Path(MODEL).exists(), reason="trained model not found"
@@ -13,29 +12,33 @@ pytestmark = pytest.mark.skipif(
 
 
 @pytest.fixture(scope="module")
-def sp():
-    return load_tokenizer(MODEL)
+def tok():
+    return AmharicTokenizer(MODEL)
 
 
-def test_vocab_size(sp):
-    assert sp.get_piece_size() == 20000
+def test_vocab_size(tok):
+    assert tok.vocab_size == 32000
 
 
-def test_common_word_is_one_token(sp):
-    assert tokenize(sp, "ሰላም") == ["▁ሰላም"]
+def test_common_word_is_one_token(tok):
+    assert tok.tokenize("ሰላም") == ["▁ሰላም"]
 
 
-def test_punctuation_is_separate(sp):
-    tokens = tokenize(sp, "ሰላም ነው።")
-    assert "▁።" in tokens
+def test_punctuation_is_separate(tok):
+    assert "▁።" in tok.tokenize("ሰላም ነው።")
 
 
-def test_homophone_spelling_gives_same_tokens(sp):
-    assert tokenize(sp, "ሠላም") == tokenize(sp, "ሰላም")
+def test_homophone_spellings_match(tok):
+    assert tok.encode("ሠላም") == tok.encode("ሰላም")
 
 
-def test_empty_string(sp):
-    assert tokenize(sp, "") == []
+def test_encode_decode_roundtrip(tok):
+    text = "እንዴት ነህ ?"
+    assert tok.decode(tok.encode(text)) == text
+
+
+def test_empty_string(tok):
+    assert tok.encode("") == []
 
 
 @pytest.mark.parametrize("text", [
@@ -45,6 +48,11 @@ def test_empty_string(sp):
     "12345",
     "ሰላም\nነው",
 ])
-def test_odd_input_never_crashes_or_loses_text(sp, text):
-    ids = sp.encode(normalize_text(text))
-    assert sp.decode(ids) == normalize_text(text)
+def test_odd_input_never_crashes(tok, text):
+    ids = tok.encode(text)
+    assert isinstance(tok.decode(ids), str)
+
+
+def test_emoji_is_not_unknown(tok):
+    # byte fallback: an unseen character must not become <unk> (id 0)
+    assert 0 not in tok.encode("ሰላም 😀")

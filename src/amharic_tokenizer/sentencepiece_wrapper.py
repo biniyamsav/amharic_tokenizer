@@ -85,3 +85,24 @@ def train_sentencepiece(
         byte_fallback=True,
         minloglevel=2,
     )
+class AmharicTokenizer:
+    """Amharic tokenizer: normalizes text, then applies a trained BPE model."""
+
+    def __init__(self, model_path: str = "models/am_bpe_32k.model"):
+        self.sp = spm.SentencePieceProcessor(model_file=model_path)
+
+    @property
+    def vocab_size(self) -> int:
+        return self.sp.get_piece_size()
+
+    def tokenize(self, text: str) -> list[str]:
+        """Text -> list of token strings."""
+        return self.sp.encode(normalize_text(text), out_type=str)
+
+    def encode(self, text: str) -> list[int]:
+        """Text -> list of token ids."""
+        return self.sp.encode(normalize_text(text))
+
+    def decode(self, ids: list[int]) -> str:
+        """Token ids -> text."""
+        return self.sp.decode(ids)
